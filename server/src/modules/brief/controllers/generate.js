@@ -2,7 +2,7 @@ import generateBriefService from "../services/generate.js";
 
 const generateBriefController = async (req, res) => {
     try {
-        const brief = await generateBriefService(req.body);
+        const brief = await generateBriefService(req.body, req.user);
         res.status(200).send(brief);
     } catch (error) {
         console.error("BriefAI Controller Error:", error);

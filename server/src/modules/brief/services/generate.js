@@ -7,14 +7,14 @@ const openai = new OpenAI({
     apiKey: process.env.OPENROUTER_API_KEY,
 });
 
-const generateBriefService = async (data) => {
+const generateBriefService = async (data, user) => {
     if (!process.env.OPENROUTER_API_KEY) {
         throw new Error("OpenRouter API key not set.");
     }
 
-    const { rawBrief, userId } = data;
+    const { rawBrief } = data;
 
-    if (!rawBrief || !userId) {
+    if (!rawBrief || !user.id) {
         throw new Error("Missing raw brief or userId.");
     }
 
@@ -28,7 +28,7 @@ const generateBriefService = async (data) => {
 You are an expert project brief assistant.
 Analyze the raw project brief text, find what’s missing (target audience, tone, deliverables, deadlines, KPIs),
 generate clarifying questions, and rewrite a clean, bullet-point summary.
-Respond ONLY in JSON:
+Respond ONLY with a valid JSON object in this format:
 {
   "missingInfo": [],
   "clarifyingQuestions": [],
@@ -42,16 +42,22 @@ Respond ONLY in JSON:
                 },
             ],
             extra_headers: {
-                "HTTP-Referer": "<YOUR_SITE_URL>", // Optional
-                "X-Title": "<YOUR_SITE_NAME>",     // Optional
+                "HTTP-Referer": "<YOUR_SITE_URL>", // optional
+                "X-Title": "<YOUR_SITE_NAME>",     // optional
             },
-            extra_body: {},
         });
 
-        const parsed = JSON.parse(completion.choices[0].message.content);
+        // ✅ Safe parsing with cleanup for ```json fences
+        let raw = completion.choices[0].message.content.trim();
+
+        if (raw.startsWith("```")) {
+            raw = raw.replace(/```[a-z]*\n?/gi, "").replace(/```$/gi, "").trim();
+        }
+
+        const parsed = JSON.parse(raw);
 
         const savedBrief = await saveBriefToDB(
-            userId,
+            user.id,
             rawBrief,
             parsed.structuredBrief,
             parsed.missingInfo,
@@ -60,10 +66,12 @@ Respond ONLY in JSON:
 
         return {
             savedBriefId: savedBrief._id,
+            rawBrief,
             structuredBrief: parsed.structuredBrief,
             missingInfo: parsed.missingInfo,
             clarifyingQuestions: parsed.clarifyingQuestions,
         };
+
     } catch (error) {
         console.error("BriefAI Service Error:", error);
         throw error;

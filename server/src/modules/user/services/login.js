@@ -11,7 +11,7 @@ const loginUser = async (data) => {
         const isPasswordCorrect = bcrypt.compareSync(data.password, user.password)
 
         if (isPasswordCorrect) {
-            var token = jwt.sign({ email: user.email }, process.env.JWT_SECRET)
+            var token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
 
             // return {
             //     ...user,
