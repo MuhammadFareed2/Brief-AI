@@ -13,7 +13,8 @@ export default function Login() {
         e.preventDefault();
         try {
             const { data } = await axios.post(
-                "http://localhost:3000/api/users/login",
+                // "http://localhost:3000/api/users/login",
+                "https://brief-ai-zeta.vercel.app/api/users/login",
                 { email, password }
             );
             localStorage.setItem("token", data.token);
