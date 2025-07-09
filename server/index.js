@@ -18,6 +18,10 @@ mongoose.connection.on("connected", () => {
     console.log('db connected')
 })
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
 app.use('/api', routes)
 
 
