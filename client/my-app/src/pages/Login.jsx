@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Eye from "../assets/icons/eye.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -13,8 +13,8 @@ export default function Login() {
         e.preventDefault();
         try {
             const { data } = await axios.post(
-                // "http://localhost:3000/api/users/login",
                 "https://brief-ai-zeta.vercel.app/api/users/login",
+                // "http://localhost:3000/api/users/login",
                 { email, password }
             );
             localStorage.setItem("token", data.token);
@@ -86,9 +86,12 @@ export default function Login() {
                                 </button>
                                 <p className="text-sm !mt-6 text-center text-slate-600">
                                     Don't have an account?{" "}
-                                    <a href="/register" className="text-blue-600 font-medium hover:underline ml-1">
+                                    <Link
+                                        to="/register"
+                                        className="text-blue-600 font-medium hover:underline ml-1"
+                                    >
                                         Register here
-                                    </a>
+                                    </Link>
                                 </p>
                             </div>
                         </form>
