@@ -19,7 +19,8 @@ export default function Dashboard() {
         try {
             const token = localStorage.getItem("token");
             const { data } = await axios.post(
-                "http://localhost:3000/api/briefs/generate",
+                "https://brief-ai-zeta.vercel.app/api/briefs/generate",
+                // "http://localhost:3000/api/briefs/generate",
                 { rawBrief },
                 {
                     headers: {
