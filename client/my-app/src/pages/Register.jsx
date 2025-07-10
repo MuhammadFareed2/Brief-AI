@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Eye from "../assets/icons/eye.png";
+import illustration from "../assets/images/illustration.png";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
@@ -27,85 +28,82 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center">
-            <div className="py-6 px-4">
-                <div className="grid lg:grid-cols-2 items-center gap-6 max-w-6xl w-full">
-                    <div className="border border-slate-300 rounded-lg p-6 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-lg:mx-auto">
-                        <form onSubmit={handleRegister} className="space-y-6">
-                            <div className="mb-12">
-                                <h1 className="text-slate-900 text-3xl font-semibold">Register</h1>
-                                <p className="text-slate-600 text-[15px] mt-6 leading-relaxed">
-                                    Create your account and join our community.
-                                </p>
-                            </div>
+        <main className="min-h-screen flex items-center justify-center px-4 py-12 bg-white">
+            <div className="grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
+                {/* Form Section */}
+                <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-8 shadow-[0_2px_22px_-4px_rgba(93,96,127,0.1)]">
+                    <form onSubmit={handleRegister} className="space-y-6">
+                        <div>
+                            <h1 className="text-slate-900 text-3xl font-semibold mb-4">Register</h1>
+                            <p className="text-slate-600 text-base leading-relaxed">
+                                Create your account and join our community.
+                            </p>
+                        </div>
 
-                            <div>
-                                <label className="text-slate-900 text-sm font-medium mb-2 block">
-                                    Email
-                                </label>
+                        <div>
+                            <label className="block mb-2 text-slate-900 text-sm font-medium">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full border border-slate-300 rounded-lg py-3 px-4 text-sm text-slate-900 outline-blue-600"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-2 text-slate-900 text-sm font-medium">
+                                Password
+                            </label>
+                            <div className="relative flex items-center">
                                 <input
-                                    name="email"
-                                    type="email"
+                                    type={showPassword ? "text" : "password"}
                                     required
-                                    placeholder="Enter your email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full text-sm text-slate-900 border border-slate-300 pl-4 pr-4 py-3 rounded-lg outline-blue-600"
+                                    placeholder="Create a password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full border border-slate-300 rounded-lg py-3 px-4 pr-10 text-sm text-slate-900 outline-blue-600"
+                                />
+                                <img
+                                    src={Eye}
+                                    alt="Toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="w-5 h-5 absolute right-4 cursor-pointer"
                                 />
                             </div>
+                        </div>
 
-                            <div>
-                                <label className="text-slate-900 text-sm font-medium mb-2 block">
-                                    Password
-                                </label>
-                                <div className="relative flex items-center">
-                                    <input
-                                        name="password"
-                                        type={showPassword ? "text" : "password"}
-                                        required
-                                        placeholder="Create a password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full text-sm text-slate-900 border border-slate-300 pl-4 pr-10 py-3 rounded-lg outline-blue-600"
-                                    />
-                                    <img
-                                        src={Eye}
-                                        alt="Toggle password"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="w-[18px] h-[18px] absolute right-4 cursor-pointer"
-                                    />
-                                </div>
-                            </div>
+                        <button
+                            type="submit"
+                            className="w-full py-3 px-4 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition"
+                        >
+                            Register
+                        </button>
 
-                            <div className="!mt-12">
-                                <button
-                                    type="submit"
-                                    className="w-full shadow-xl py-2.5 px-4 text-[15px] font-medium tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer"
-                                >
-                                    Register
-                                </button>
-                                <p className="text-sm !mt-6 text-center text-slate-600">
-                                    Already have an account?{" "}
-                                    <Link
-                                        to="/login"
-                                        className="text-blue-600 font-medium hover:underline ml-1"
-                                    >
-                                        Login here
-                                    </Link>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
+                        <p className="text-center text-sm text-slate-600">
+                            Already have an account?{" "}
+                            <Link
+                                to="/login"
+                                className="text-blue-600 hover:underline font-medium"
+                            >
+                                Login here
+                            </Link>
+                        </p>
+                    </form>
+                </div>
 
-                    <div className="max-lg:mt-8">
-                        <img
-                            src="https://readymadeui.com/login-image.webp"
-                            alt="auth visual"
-                            className="w-full aspect-[71/50] max-lg:w-4/5 mx-auto block object-cover"
-                        />
-                    </div>
+                {/* Illustration Section */}
+                <div className="flex justify-center">
+                    <img
+                        src={illustration}
+                        alt="Register Illustration"
+                        className="w-full max-w-lg object-contain"
+                    />
                 </div>
             </div>
-        </div>
+        </main>
     );
 }
