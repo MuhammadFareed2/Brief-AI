@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import Logo from "../assets/icons/eye.png";
+import Logo from "../assets/logo/logo.png";
 import HomeIcon from "../assets/icons/dashboard.png";
 import UploadIcon from "../assets/icons/upload.png";
+
 import LogoutIcon from "../assets/icons/logout.png";
 
 export default function Sidebar() {
