@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import ScrollContainer from "react-indiana-drag-scroll";
 import Layout from "../components/Layout";
 
 export default function UploadBrief() {
@@ -7,8 +8,7 @@ export default function UploadBrief() {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleGenerateBrief = async (e) => {
-        e.preventDefault();
+    const handleGenerateBrief = async () => {
         setLoading(true);
         setResult(null);
 
@@ -34,50 +34,91 @@ export default function UploadBrief() {
 
     return (
         <Layout>
-            <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <h1 className="text-3xl font-bold mb-4">Upload Brief</h1>
-                <p className="mb-6 text-gray-600">
-                    Submit a raw brief to generate a clear roadmap.
-                </p>
-
-                <form onSubmit={handleGenerateBrief} className="w-full max-w-xl">
-                    <textarea
-                        rows="6"
-                        placeholder="Enter your raw project brief here..."
-                        value={rawBrief}
-                        onChange={(e) => setRawBrief(e.target.value)}
-                        className="w-full p-4 border border-gray-300 rounded-lg mb-4"
-                        required
-                    />
-                    <button
-                        type="submit"
-                        className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                        disabled={loading}
-                    >
-                        {loading ? "Generating..." : "Generate Brief"}
-                    </button>
-                </form>
-
-                {result && (
-                    <div className="w-full max-w-2xl mt-8 p-6 border border-gray-300 rounded-lg bg-white shadow">
-                        <h2 className="text-xl font-semibold mb-4">Structured Brief</h2>
-                        <pre className="whitespace-pre-wrap mb-6">{result.structuredBrief}</pre>
-
-                        <h3 className="text-lg font-semibold mb-2">Missing Information</h3>
-                        <ul className="list-disc list-inside mb-6">
-                            {result.missingInfo.map((item, index) => (
-                                <li key={index}>{item}</li>
-                            ))}
-                        </ul>
-
-                        <h3 className="text-lg font-semibold mb-2">Clarifying Questions</h3>
-                        <ul className="list-decimal list-inside">
-                            {result.clarifyingQuestions.map((q, index) => (
-                                <li key={index}>{q}</li>
-                            ))}
-                        </ul>
+            <div className="w-full h-full flex flex-col gap-4 p-4 font-['Poppins'] box-border">
+                {/* Stepper */}
+                <ScrollContainer
+                    className="md:w-full flex scroll-w-fix p-2 rounded-lg bg-gray-100 cursor-grab"
+                    vertical={false}
+                    hideScrollbars={true}
+                >
+                    {/* Step 1 */}
+                    <div className="flex-shrink-0 flex items-center justify-center w-48 h-16 p-2 rounded-md text-xs border bg-blue-100 border-blue-800">
+                        1️⃣ Enter Raw Brief
                     </div>
-                )}
+
+                    {/* Connector */}
+                    <div className="flex items-center flex-shrink-0">
+                        <div className="h-2 w-2 rounded-full bg-gray-600"></div>
+                        <div className="h-[1.5px] w-20 bg-gray-600"></div>
+                        <div className="h-2 w-2 rounded-full bg-gray-600"></div>
+                        <button
+                            onClick={handleGenerateBrief}
+                            disabled={!rawBrief || loading}
+                            className={`flex items-center justify-center w-48 h-16 p-2 rounded-md text-xs border ${rawBrief && !loading
+                                    ? "bg-blue-600 text-white cursor-pointer"
+                                    : "bg-blue-100 text-black cursor-not-allowed"
+                                } border-blue-800`}
+                        >
+                            {loading ? "Generating..." : "2️⃣ Generate Structured Brief"}
+                        </button>
+                    </div>
+
+                    {result && (
+                        <div className="flex items-center flex-shrink-0">
+                            <div className="h-2 w-2 rounded-full bg-gray-600"></div>
+                            <div className="h-[1.5px] w-20 bg-gray-600"></div>
+                            <div className="h-2 w-2 rounded-full bg-gray-600"></div>
+                            <div className="flex items-center justify-center w-48 h-16 p-2 rounded-md text-xs border bg-green-200 border-green-800">
+                                ✅ Brief Ready!
+                            </div>
+                        </div>
+                    )}
+                </ScrollContainer>
+
+                {/* Input + Output */}
+                <div className="flex md:flex-row flex-col gap-4">
+                    {/* Input */}
+                    <div className="flex flex-col gap-2 md:w-1/2 w-full">
+                        <textarea
+                            rows="8"
+                            placeholder="Enter your raw project brief..."
+                            value={rawBrief}
+                            onChange={(e) => setRawBrief(e.target.value)}
+                            className="w-full p-4 border border-gray-300 rounded-lg"
+                            required
+                        />
+                    </div>
+
+                    {/* Output */}
+                    <div className="flex flex-col gap-4 md:w-1/2 w-full">
+                        {result && (
+                            <>
+                                <div className="p-4 border border-gray-300 rounded-lg bg-white shadow">
+                                    <h2 className="text-lg font-semibold mb-2">📌 Structured Brief</h2>
+                                    <pre className="whitespace-pre-wrap">{result.structuredBrief}</pre>
+                                </div>
+
+                                <div className="p-4 border border-gray-300 rounded-lg bg-white shadow">
+                                    <h3 className="text-md font-semibold mb-2">❌ Missing Information</h3>
+                                    <ul className="list-disc list-inside">
+                                        {result.missingInfo.map((item, idx) => (
+                                            <li key={idx}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="p-4 border border-gray-300 rounded-lg bg-white shadow">
+                                    <h3 className="text-md font-semibold mb-2">❓ Clarifying Questions</h3>
+                                    <ul className="list-decimal list-inside">
+                                        {result.clarifyingQuestions.map((q, idx) => (
+                                            <li key={idx}>{q}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
             </div>
         </Layout>
     );

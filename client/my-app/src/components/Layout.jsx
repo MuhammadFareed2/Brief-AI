@@ -3,11 +3,13 @@ import Sidebar from "./SideBar";
 
 export default function Layout({ children }) {
     return (
-        <div className="flex">
+        <>
             <Sidebar />
-            <main className="flex-1 ml-[64px] md:ml-[200px] p-4">
+            <main className="min-h-screen p-4 pl-[64px]">
+
                 {children}
             </main>
-        </div>
+        </>
     );
 }
+

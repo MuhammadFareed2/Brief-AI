@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/icons/eye.png";
-import HomeIcon from "../assets/icons/eye.png";
-import UploadIcon from "../assets/icons/eye.png";
-import LogoutIcon from "../assets/icons/eye.png";
+import HomeIcon from "../assets/icons/dashboard.png";
+import UploadIcon from "../assets/icons/upload.png";
+import LogoutIcon from "../assets/icons/logout.png";
 
 export default function Sidebar() {
-    const [navOpen, setNavOpen] = useState(false);
+    const [navOpen, setNavOpen] = useState(
+        () => JSON.parse(localStorage.getItem("navOpen")) || false
+    );
+
+    const handleToggle = () => {
+        const newState = !navOpen;
+        setNavOpen(newState);
+        localStorage.setItem("navOpen", JSON.stringify(newState));
+    };
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -16,6 +24,7 @@ export default function Sidebar() {
     const handleNavClick = () => {
         if (window.innerWidth < 768) {
             setNavOpen(false);
+            localStorage.setItem("navOpen", "false");
         }
     };
 
@@ -23,24 +32,36 @@ export default function Sidebar() {
         <>
             {/* Toggle button for mobile */}
             <button
-                className="md:hidden flex items-center justify-center text-white z-10 h-10 w-10 rounded-md bg-green-900 absolute top-2 right-2"
-                onClick={() => setNavOpen(!navOpen)}
+                className="md:hidden flex items-center justify-center text-white z-50 h-10 w-10 rounded-md bg-green-900 absolute top-2 right-2"
+                onClick={handleToggle}
             >
-                H
+                ☰
             </button>
 
             <aside
                 className={`
-          h-screen absolute md:sticky top-0 py-4 flex flex-col gap-5 
-          font-['Poppins'] bg-slate-900 transition-all duration-300 ease-in-out
+          fixed top-0 left-0 h-screen bg-slate-900 transition-all duration-300 ease-in-out
+          flex flex-col gap-5 py-4 font-['Poppins']
           ${navOpen ? "w-[200px]" : "w-[64px]"}
-          md:w-[64px] md:hover:w-[200px] group
+          md:${navOpen ? "w-[200px]" : "w-[64px]"} md:hover:w-[200px] group z-50
         `}
             >
+                {/* Logo */}
                 <div className="flex items-center gap-3 px-2">
                     <img src={Logo} className="w-8" alt="Logo" />
+                    <div
+                        className={`
+              text-white text-lg font-bold overflow-hidden whitespace-nowrap transition-all duration-300
+              ${navOpen ? "opacity-100 ml-2 w-auto" : "opacity-0 w-0 ml-0"}
+              md:${navOpen ? "opacity-100 ml-2 w-auto" : "opacity-0 w-0 ml-0"}
+              md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-2
+            `}
+                    >
+                        BriefAI
+                    </div>
                 </div>
 
+                {/* Links */}
                 <ul className="pt-5 flex flex-col gap-1 border-t border-slate-400">
                     <NavLink
                         to="/dashboard"
@@ -55,7 +76,8 @@ export default function Sidebar() {
                             className={`
                 text-white overflow-hidden whitespace-nowrap transition-all duration-300
                 ${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                md:opacity-0 md:w-0 md:ml-0 md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
+                md:${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+                md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
               `}
                         >
                             Dashboard
@@ -75,7 +97,8 @@ export default function Sidebar() {
                             className={`
                 text-white overflow-hidden whitespace-nowrap transition-all duration-300
                 ${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                md:opacity-0 md:w-0 md:ml-0 md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
+                md:${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+                md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
               `}
                         >
                             Upload Brief
@@ -83,7 +106,8 @@ export default function Sidebar() {
                     </NavLink>
                 </ul>
 
-                <ul className="pt-5 flex flex-col gap-1 border-t border-slate-400">
+                {/* Logout */}
+                <ul className="pt-5 flex flex-col gap-1 border-t border-slate-400 mt-auto">
                     <li
                         className="py-3 px-5 flex items-center text-xs cursor-pointer"
                         onClick={() => {
@@ -96,7 +120,8 @@ export default function Sidebar() {
                             className={`
                 text-white overflow-hidden whitespace-nowrap transition-all duration-300
                 ${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                md:opacity-0 md:w-0 md:ml-0 md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
+                md:${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+                md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
               `}
                         >
                             Logout

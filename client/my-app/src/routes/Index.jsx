@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UploadBrief from "../pages/UploadBrief";
 import Dashboard from "../pages/Dashboard";
+import History from "../pages/History";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
@@ -36,6 +37,14 @@ export default function AppRouter() {
                     element={
                         <ProtectedRoute>
                             <Dashboard /> {/* ✅ Now uses UploadBrief */}
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/mybriefs"
+                    element={
+                        <ProtectedRoute>
+                            <History /> {/* ✅ Now uses UploadBrief */}
                         </ProtectedRoute>
                     }
                 />
