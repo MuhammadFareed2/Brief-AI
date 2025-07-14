@@ -18,7 +18,6 @@ export default function Register() {
                 // "http://localhost:3000/api/users/register",
                 { email, password }
             );
-            localStorage.setItem("token", data.token);
             console.log("Registration successful:", data);
             navigate("/dashboard");
         } catch (err) {
