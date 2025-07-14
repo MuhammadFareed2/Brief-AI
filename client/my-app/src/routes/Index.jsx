@@ -41,7 +41,7 @@ export default function AppRouter() {
                     }
                 />
                 <Route
-                    path="/mybriefs"
+                    path="/history"
                     element={
                         <ProtectedRoute>
                             <History /> {/* ✅ Now uses UploadBrief */}

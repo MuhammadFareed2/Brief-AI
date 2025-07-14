@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "../assets/logo/logo.png";
 import HomeIcon from "../assets/icons/dashboard.png";
 import UploadIcon from "../assets/icons/upload.png";
+import HistoryIcon from "../assets/icons/history.png";
 
 import LogoutIcon from "../assets/icons/logout.png";
 
@@ -105,6 +106,29 @@ export default function Sidebar() {
                             Upload Brief
                         </div>
                     </NavLink>
+                    <NavLink
+                        to="/history"
+                        className={({ isActive }) =>
+                            `py-3 px-5 flex items-center text-xs ${isActive ? "border-r-4 border-green-400 bg-slate-800" : ""
+                            }`
+                        }
+                        onClick={handleNavClick}
+                    >
+                        <img className="w-5 nav-icon" src={HistoryIcon} alt="History" />
+                        <div
+                            className={`
+      text-white overflow-hidden whitespace-nowrap transition-all duration-300
+      ${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+      md:${navOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+      md:group-hover:opacity-100 md:group-hover:w-auto md:group-hover:ml-4
+    `}
+                        >
+                            History
+                        </div>
+                    </NavLink>
+
+
+
                 </ul>
 
                 {/* Logout */}
