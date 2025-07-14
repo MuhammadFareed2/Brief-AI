@@ -1,15 +1,28 @@
-import addData from '../db/register.js'
-import bcrypt from 'bcrypt'
+// services/register.js
+
+import addData from '../db/register.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import "dotenv/config";
 
 const registerUser = async (data) => {
+    // Hash the password
+    const hashedPassword = bcrypt.hashSync(data.password, 10);
+    data.password = hashedPassword;
 
-    const password = bcrypt.hashSync(data.password, 10)
+    // Save user to DB
+    const savedUser = await addData(data);
 
-    data.password = password
+    // Generate JWT — NO expiry
+    const token = jwt.sign(
+        { id: savedUser._id },
+        process.env.JWT_SECRET
+    );
 
-    return await addData(data)
+    return {
+        user: savedUser,
+        token: token,
+    };
+};
 
-
-}
-
-export default registerUser
+export default registerUser;

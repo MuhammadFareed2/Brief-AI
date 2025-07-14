@@ -1,32 +1,33 @@
+// controllers/register.js
+
 import registerUser from '../services/register.js';
 
 const registerController = async (req, res) => {
     try {
-        await registerUser(req.body)
-        res.status(201).send({
-            req: req.body,
-            status: 201,
-            message: 'User Created.'
-        })
-        console.log(req.body)
-    }
-    catch (err) {
-        if (err.code == 11000) {
-            res.status(405).send({
-                req: req.body,
-                status: 409,
-                message: "Email already exists."
-            })
-        }
-        else {
-            res.status(500).send({
-                req: req.body,
-                status: 400,
-                message: "User not created."
-            })
-        }
-        // console.log(err.code)
-    }
-}
+        const result = await registerUser(req.body);
 
-export default registerController
+        res.status(201).send({
+            status: 201,
+            message: 'User Created Successfully.',
+            user: result.user,
+            token: result.token, // ✅ Send token!
+        });
+
+        console.log("[REGISTER] User created:", result.user._id);
+    } catch (err) {
+        if (err.code === 11000) {
+            res.status(409).send({
+                status: 409,
+                message: "Email already exists.",
+            });
+        } else {
+            console.error("[REGISTER ERROR]", err);
+            res.status(500).send({
+                status: 500,
+                message: "Internal server error. User not created.",
+            });
+        }
+    }
+};
+
+export default registerController;

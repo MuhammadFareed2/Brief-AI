@@ -18,7 +18,11 @@ export default function Register() {
                 // "http://localhost:3000/api/users/register",
                 { email, password }
             );
-            console.log("Registration successful:", data);
+
+            console.log("✅ Token received:", data.token);
+
+            localStorage.setItem("token", data.token);
+
             navigate("/dashboard");
         } catch (err) {
             console.error(err.response?.data?.message || err.message);
@@ -84,10 +88,7 @@ export default function Register() {
 
                         <p className="text-center text-sm text-slate-600">
                             Already have an account?{" "}
-                            <Link
-                                to="/login"
-                                className="text-blue-600 hover:underline font-medium"
-                            >
+                            <Link to="/login" className="text-blue-600 hover:underline font-medium">
                                 Login here
                             </Link>
                         </p>
@@ -106,3 +107,5 @@ export default function Register() {
         </main>
     );
 }
+
+
