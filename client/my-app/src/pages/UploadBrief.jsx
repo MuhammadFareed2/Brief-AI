@@ -14,6 +14,9 @@ export default function UploadBrief() {
 
         try {
             const token = localStorage.getItem("token");
+
+            console.log("📌 Token used for /generate:", token);
+
             const { data } = await axios.post(
                 "https://brief-ai-zeta.vercel.app/api/briefs/generate",
                 { rawBrief },
@@ -55,8 +58,8 @@ export default function UploadBrief() {
                             onClick={handleGenerateBrief}
                             disabled={!rawBrief || loading}
                             className={`flex items-center justify-center w-48 h-16 p-2 rounded-md text-xs border ${rawBrief && !loading
-                                    ? "bg-blue-600 text-white cursor-pointer"
-                                    : "bg-blue-100 text-black cursor-not-allowed"
+                                ? "bg-blue-600 text-white cursor-pointer"
+                                : "bg-blue-100 text-black cursor-not-allowed"
                                 } border-blue-800`}
                         >
                             {loading ? "Generating..." : "2️⃣ Generate Structured Brief"}

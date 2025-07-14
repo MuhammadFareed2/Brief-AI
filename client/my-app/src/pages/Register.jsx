@@ -22,6 +22,8 @@ export default function Register() {
             console.log("✅ Token received:", data.token);
 
             localStorage.setItem("token", data.token);
+            console.log("✅ Saved token in localStorage:", localStorage.getItem("token"));
+
 
             navigate("/dashboard");
         } catch (err) {
