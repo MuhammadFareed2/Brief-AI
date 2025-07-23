@@ -22,15 +22,3 @@ export const saveBriefToDB = async (userId, rawBrief, structuredBrief, missingIn
 };
 
 
-/**
- * Get a brief by ID
- */
-export const getBriefById = async (briefId) => {
-    try {
-        const brief = await briefModel.findById(briefId);
-        return brief;
-    } catch (error) {
-        console.error("DB Error fetching brief by ID:", error);
-        throw error;
-    }
-};

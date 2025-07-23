@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import UploadBrief from "../pages/UploadBrief";
 import Dashboard from "../pages/Dashboard";
 import History from "../pages/History";
+import BriefDetails from "../pages/BriefDetails";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
@@ -48,6 +49,15 @@ export default function AppRouter() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/briefs/:id"
+                    element={
+                        <ProtectedRoute>
+                            <BriefDetails />
+                        </ProtectedRoute>
+                    }
+                />
+
             </Routes>
         </BrowserRouter>
     );
