@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom"; // ✅ Add this
+import { Link } from "react-router-dom";
 
 export default function History() {
     const [briefs, setBriefs] = useState([]);
@@ -32,50 +32,45 @@ export default function History() {
 
     return (
         <Layout>
-            <div className="p-4 font-['Poppins']">
-                <h1 className="text-[20px] font-bold mb-4 text-gray-800">
+            <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
+                <h1 className="text-2xl font-bold mb-6 text-gray-900">
                     Your Brief History
                 </h1>
 
                 {loading && (
-                    <p className="text-[14px] text-gray-600">Loading briefs...</p>
+                    <p className="text-gray-600 text-sm">Loading briefs...</p>
                 )}
 
                 {!loading && briefs.length === 0 && (
-                    <p className="text-[14px] text-gray-600">
-                        No briefs found. Create some briefs to see them here.
+                    <p className="text-gray-600 text-sm">
+                        No briefs found. Start by creating one.
                     </p>
                 )}
 
                 <div className="flex flex-col gap-4">
                     {briefs.map((brief) => (
-                        <Link // ✅ Use Link instead of div
+                        <Link
                             key={brief._id}
                             to={`/briefs/${brief._id}`}
-                            className="p-4 border border-gray-200 rounded-md bg-white shadow-sm hover:shadow-md transition-shadow block"
+                            className="bg-white p-5 border border-gray-200 rounded-md shadow-sm hover:shadow-md hover:border-blue-500 transition-all"
                         >
-                            <h2 className="text-[16px] font-semibold mb-2 text-gray-800">
-                                Brief ID: {brief._id}
-                            </h2>
-
-                            <p className="text-[14px] text-gray-700 mb-1">
-                                <span className="font-medium">Created:</span>{" "}
-                                {new Date(brief.createdAt).toLocaleString()}
+                            <p className="text-sm text-gray-500 mb-1">
+                                Created on: {new Date(brief.createdAt).toLocaleString()}
                             </p>
 
-                            <p className="text-[14px] text-gray-700 mb-1">
-                                <span className="font-medium">Raw Brief:</span>{" "}
-                                {brief.rawBrief.slice(0, 100)}...
+                            <p className="text-gray-800 text-sm mb-1 line-clamp-2">
+                                <span className="font-medium">Raw:</span>{" "}
+                                {brief.rawBrief || "N/A"}
                             </p>
 
-                            <p className="text-[14px] text-gray-700 mb-1">
+                            <p className="text-gray-800 text-sm mb-1 line-clamp-2">
                                 <span className="font-medium">Structured:</span>{" "}
-                                {brief.structuredBrief.slice(0, 100)}...
+                                {brief.structuredBrief || "N/A"}
                             </p>
 
-                            <p className="text-[13px] text-gray-600">
-                                {brief.clarifyingQuestions.length} clarifying questions ·{" "}
-                                {brief.missingInfo.length} missing info
+                            <p className="text-xs text-gray-600">
+                                {brief.clarifyingQuestions?.length || 0} clarifying questions ·{" "}
+                                {brief.missingInfo?.length || 0} missing info
                             </p>
                         </Link>
                     ))}

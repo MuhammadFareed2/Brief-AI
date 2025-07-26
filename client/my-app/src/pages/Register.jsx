@@ -15,32 +15,24 @@ export default function Register() {
         try {
             const { data } = await axios.post(
                 "https://brief-ai-zeta.vercel.app/api/users/register",
-                // "http://localhost:3000/api/users/register",
                 { email, password }
             );
-
-            console.log("✅ Token received:", data.token);
-
             localStorage.setItem("token", data.token);
-            console.log("✅ Saved token in localStorage:", localStorage.getItem("token"));
-
-
             navigate("/dashboard");
         } catch (err) {
-            console.error(err.response?.data?.message || err.message);
             alert(err.response?.data?.message || "Registration failed");
         }
     };
 
     return (
-        <main className="min-h-screen flex items-center justify-center px-4 py-12 bg-white">
-            <div className="grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
+        <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-white">
+            <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
                 {/* Form Section */}
-                <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-8 shadow-[0_2px_22px_-4px_rgba(93,96,127,0.1)]">
+                <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-6 shadow-md">
                     <form onSubmit={handleRegister} className="space-y-6">
                         <div>
-                            <h1 className="text-slate-900 text-3xl font-semibold mb-4">Register</h1>
-                            <p className="text-slate-600 text-base leading-relaxed">
+                            <h1 className="text-slate-900 text-3xl font-semibold mb-2">Register</h1>
+                            <p className="text-slate-600 text-base">
                                 Create your account and join our community.
                             </p>
                         </div>
@@ -98,16 +90,14 @@ export default function Register() {
                 </div>
 
                 {/* Illustration Section */}
-                <div className="flex justify-center">
+                <div className="flex justify-center mb-8 lg:mb-0">
                     <img
                         src={illustration}
                         alt="Register Illustration"
-                        className="w-full max-w-lg object-contain"
+                        className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg object-contain"
                     />
                 </div>
             </div>
         </main>
     );
 }
-
-
