@@ -1,8 +1,1 @@
 @import "tailwindcss";
-
-@media print {
-  * {
-    border: none !important;
-    box-shadow: none !important;
-  }
-}

@@ -2,9 +2,73 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Layout from "../components/Layout";
-import domtoimage from "dom-to-image-more";
-import jsPDF from "jspdf";
+import {
+    Page,
+    Text,
+    View,
+    Document,
+    StyleSheet,
+    PDFDownloadLink,
+} from "@react-pdf/renderer";
 
+// Styles for PDF content
+const pdfStyles = StyleSheet.create({
+    page: { padding: 30, fontSize: 12, fontFamily: "Helvetica" },
+    section: { marginBottom: 20 },
+    title: { fontSize: 16, marginBottom: 8, fontWeight: "bold" },
+    listItem: { marginLeft: 10, marginBottom: 4 },
+});
+
+// PDF Document Component
+const BriefPDF = ({ brief, selectedSections }) => (
+    <Document>
+        <Page size="A4" style={pdfStyles.page}>
+            <Text>Brief Created: {new Date(brief.createdAt).toLocaleString()}</Text>
+
+            {selectedSections.raw && (
+                <View style={pdfStyles.section}>
+                    <Text style={pdfStyles.title}>Raw Brief</Text>
+                    <Text>{brief.rawBrief || "N/A"}</Text>
+                </View>
+            )}
+
+            {selectedSections.structured && (
+                <View style={pdfStyles.section}>
+                    <Text style={pdfStyles.title}>Structured Brief</Text>
+                    <Text>{brief.structuredBrief || "N/A"}</Text>
+                </View>
+            )}
+
+            {selectedSections.missing && (
+                <View style={pdfStyles.section}>
+                    <Text style={pdfStyles.title}>Missing Information</Text>
+                    {brief.missingInfo?.length ? (
+                        brief.missingInfo.map((item, i) => (
+                            <Text key={i} style={pdfStyles.listItem}>• {item}</Text>
+                        ))
+                    ) : (
+                        <Text>None</Text>
+                    )}
+                </View>
+            )}
+
+            {selectedSections.questions && (
+                <View style={pdfStyles.section}>
+                    <Text style={pdfStyles.title}>Clarifying Questions</Text>
+                    {brief.clarifyingQuestions?.length ? (
+                        brief.clarifyingQuestions.map((q, i) => (
+                            <Text key={i} style={pdfStyles.listItem}>{i + 1}. {q}</Text>
+                        ))
+                    ) : (
+                        <Text>None</Text>
+                    )}
+                </View>
+            )}
+        </Page>
+    </Document>
+);
+
+// Main Component
 export default function BriefDetails() {
     const { id } = useParams();
     const [brief, setBrief] = useState(null);
@@ -44,32 +108,6 @@ export default function BriefDetails() {
         }));
     };
 
-    const handleExportPDF = () => {
-        const node = document.getElementById("pdf-content");
-        if (!node) {
-            alert("Nothing to export!");
-            return;
-        }
-
-        domtoimage
-            .toPng(node)
-            .then((dataUrl) => {
-                const pdf = new jsPDF("p", "mm", "a4");
-                const img = new Image();
-                img.src = dataUrl;
-                img.onload = () => {
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (img.height * pdfWidth) / img.width;
-                    pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
-                    pdf.save(`brief-${id}.pdf`);
-                };
-            })
-            .catch((error) => {
-                console.error("PDF generation failed:", error);
-                alert("PDF generation failed. See console for details.");
-            });
-    };
-
     if (loading) {
         return (
             <Layout>
@@ -89,7 +127,6 @@ export default function BriefDetails() {
     return (
         <Layout>
             <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                         Brief Details
@@ -129,17 +166,30 @@ export default function BriefDetails() {
                                 </label>
                             ))}
                         </div>
-                        <button
-                            onClick={handleExportPDF}
-                            className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                        >
-                            Download PDF
-                        </button>
+
+                        <div className="mt-4">
+                            <PDFDownloadLink
+                                document={
+                                    <BriefPDF brief={brief} selectedSections={selectedSections} />
+                                }
+                                fileName={`brief-${id}.pdf`}
+                            >
+                                {({ loading }) =>
+                                    loading ? (
+                                        <span className="text-gray-500">Preparing PDF...</span>
+                                    ) : (
+                                        <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                            Download PDF
+                                        </button>
+                                    )
+                                }
+                            </PDFDownloadLink>
+                        </div>
                     </div>
                 )}
 
-                {/* PDF Content */}
-                <div id="pdf-content" className="space-y-6">
+                {/* Brief Content */}
+                <div className="space-y-6">
                     <p className="text-sm text-gray-500">
                         Created: {new Date(brief.createdAt).toLocaleString()}
                     </p>
@@ -193,7 +243,7 @@ export default function BriefDetails() {
     );
 }
 
-// Reusable Card Component
+// Reusable Section Card
 const SectionCard = ({ title, color, children }) => (
     <div className={`bg-white p-5 rounded-md shadow border-t-4 ${color}`}>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">{title}</h2>
