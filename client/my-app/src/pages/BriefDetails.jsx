@@ -8,10 +8,10 @@ import {
     View,
     Document,
     StyleSheet,
-    PDFDownloadLink,
+    pdf,
 } from "@react-pdf/renderer";
 
-// Styles for PDF content
+// PDF styles
 const pdfStyles = StyleSheet.create({
     page: { padding: 30, fontSize: 12, fontFamily: "Helvetica" },
     section: { marginBottom: 20 },
@@ -19,8 +19,8 @@ const pdfStyles = StyleSheet.create({
     listItem: { marginLeft: 10, marginBottom: 4 },
 });
 
-// PDF Document Component
-const BriefPDF = ({ brief, selectedSections }) => (
+// Memoized PDF component
+const BriefPDF = React.memo(({ brief, selectedSections }) => (
     <Document>
         <Page size="A4" style={pdfStyles.page}>
             <Text>Brief Created: {new Date(brief.createdAt).toLocaleString()}</Text>
@@ -66,9 +66,8 @@ const BriefPDF = ({ brief, selectedSections }) => (
             )}
         </Page>
     </Document>
-);
+));
 
-// Main Component
 export default function BriefDetails() {
     const { id } = useParams();
     const [brief, setBrief] = useState(null);
@@ -108,6 +107,18 @@ export default function BriefDetails() {
         }));
     };
 
+    const handleManualDownload = async () => {
+        const doc = (
+            <BriefPDF brief={brief} selectedSections={selectedSections} />
+        );
+        const blob = await pdf(doc).toBlob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `brief-${id}.pdf`;
+        a.click();
+    };
+
     if (loading) {
         return (
             <Layout>
@@ -128,9 +139,7 @@ export default function BriefDetails() {
         <Layout>
             <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                        Brief Details
-                    </h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Brief Details</h1>
                     <button
                         onClick={() => setShowExportOptions(!showExportOptions)}
                         className="bg-blue-600 text-white px-5 py-2 rounded-md shadow hover:bg-blue-700 transition"
@@ -139,56 +148,34 @@ export default function BriefDetails() {
                     </button>
                 </div>
 
-                {/* Export Options */}
                 {showExportOptions && (
                     <div className="mb-6 bg-white p-5 rounded-lg shadow border border-gray-200">
-                        <p className="text-gray-800 font-semibold mb-3">
-                            Choose what to export:
-                        </p>
+                        <p className="text-gray-800 font-semibold mb-3">Choose what to export:</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                            {[
-                                { key: "raw", label: "Raw Brief" },
-                                { key: "structured", label: "Structured Brief" },
-                                { key: "missing", label: "Missing Info" },
-                                { key: "questions", label: "Questions" },
-                            ].map((section) => (
-                                <label
-                                    key={section.key}
-                                    className="inline-flex items-center gap-2 text-gray-700"
-                                >
+                            {["raw", "structured", "missing", "questions"].map((key) => (
+                                <label key={key} className="inline-flex items-center gap-2 text-gray-700">
                                     <input
                                         type="checkbox"
-                                        checked={selectedSections[section.key]}
-                                        onChange={() => handleCheckboxChange(section.key)}
+                                        checked={selectedSections[key]}
+                                        onChange={() => handleCheckboxChange(key)}
                                         className="accent-blue-600"
                                     />
-                                    {section.label}
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}
                                 </label>
                             ))}
                         </div>
 
                         <div className="mt-4">
-                            <PDFDownloadLink
-                                document={
-                                    <BriefPDF brief={brief} selectedSections={selectedSections} />
-                                }
-                                fileName={`brief-${id}.pdf`}
+                            <button
+                                onClick={handleManualDownload}
+                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
                             >
-                                {({ loading }) =>
-                                    loading ? (
-                                        <span className="text-gray-500">Preparing PDF...</span>
-                                    ) : (
-                                        <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                                            Download PDF
-                                        </button>
-                                    )
-                                }
-                            </PDFDownloadLink>
+                                Download PDF
+                            </button>
                         </div>
                     </div>
                 )}
 
-                {/* Brief Content */}
                 <div className="space-y-6">
                     <p className="text-sm text-gray-500">
                         Created: {new Date(brief.createdAt).toLocaleString()}
@@ -196,17 +183,13 @@ export default function BriefDetails() {
 
                     {selectedSections.raw && (
                         <SectionCard title="Raw Brief" color="border-green-500">
-                            <p className="whitespace-pre-line text-sm">
-                                {brief.rawBrief || "N/A"}
-                            </p>
+                            <p className="whitespace-pre-line text-sm">{brief.rawBrief || "N/A"}</p>
                         </SectionCard>
                     )}
 
                     {selectedSections.structured && (
                         <SectionCard title="Structured Brief" color="border-blue-500">
-                            <p className="whitespace-pre-line text-sm">
-                                {brief.structuredBrief || "N/A"}
-                            </p>
+                            <p className="whitespace-pre-line text-sm">{brief.structuredBrief || "N/A"}</p>
                         </SectionCard>
                     )}
 
@@ -243,7 +226,6 @@ export default function BriefDetails() {
     );
 }
 
-// Reusable Section Card
 const SectionCard = ({ title, color, children }) => (
     <div className={`bg-white p-5 rounded-md shadow border-t-4 ${color}`}>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">{title}</h2>
