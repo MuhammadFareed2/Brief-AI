@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import Loader from "../components/Loader"; // ✅ Import Loader
 import axios from "axios";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -32,13 +33,13 @@ export default function Dashboard() {
 
     return (
         <Layout>
+            {loading && <Loader fullscreen />} {/* ✅ Fullscreen Loader over entire dashboard */}
+
             <div className="mb-6 px-4">
                 <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>
             </div>
 
-            {loading ? (
-                <p className="text-slate-500 px-4">Loading stats...</p>
-            ) : stats ? (
+            {!loading && stats ? (
                 <>
                     {/* Stats Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 px-4">
@@ -96,9 +97,9 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </>
-            ) : (
+            ) : !loading ? (
                 <p className="text-red-500 px-4">No stats found.</p>
-            )}
+            ) : null}
         </Layout>
     );
 }

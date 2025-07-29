@@ -10,6 +10,7 @@ import {
     StyleSheet,
     pdf,
 } from "@react-pdf/renderer";
+import Loader from "../components/Loader";
 
 // PDF styles
 const pdfStyles = StyleSheet.create({
@@ -121,9 +122,9 @@ export default function BriefDetails() {
 
     if (loading) {
         return (
-            <Layout>
-                <div className="p-6 text-gray-700 text-lg">Loading brief...</div>
-            </Layout>
+            <>
+                <Loader fullscreen />
+            </>
         );
     }
 

@@ -3,15 +3,18 @@ import axios from "axios";
 import Eye from "../assets/icons/eye.png";
 import illustration from "../assets/images/illustration.png";
 import { useNavigate, Link } from "react-router-dom";
+import Loader from "../components/Loader";
 
 export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const { data } = await axios.post(
                 "https://brief-ai-zeta.vercel.app/api/users/register",
@@ -21,11 +24,14 @@ export default function Register() {
             navigate("/dashboard");
         } catch (err) {
             alert(err.response?.data?.message || "Registration failed");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-white">
+        <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-white relative">
+            {loading && <Loader fullscreen />}
             <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
                 {/* Form Section */}
                 <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-6 shadow-md">
@@ -91,7 +97,6 @@ export default function Register() {
 
                 {/* Illustration Section */}
                 <div className="hidden lg:flex justify-center mb-8 lg:mb-0">
-
                     <img
                         src={illustration}
                         alt="Register Illustration"

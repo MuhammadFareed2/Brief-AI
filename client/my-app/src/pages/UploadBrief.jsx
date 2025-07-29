@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom"; // ✅ Import Link
+import { Link } from "react-router-dom";
+import Loader from "../components/Loader"; // ✅ Import Loader
 
 export default function UploadBrief() {
     const [rawBrief, setRawBrief] = useState("");
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [history, setHistory] = useState([]); // ✅ Add history state
+    const [history, setHistory] = useState([]);
     const [historyLoading, setHistoryLoading] = useState(true);
 
     const handleGenerateBrief = async () => {
@@ -26,7 +27,7 @@ export default function UploadBrief() {
                 }
             );
             setResult(data);
-            fetchHistory(); // ✅ Refresh history after new brief is added
+            fetchHistory();
         } catch (err) {
             console.error(err);
             alert("Failed to generate brief. Check console for details.");
@@ -35,7 +36,6 @@ export default function UploadBrief() {
         }
     };
 
-    // ✅ Fetch history when page loads
     const fetchHistory = async () => {
         try {
             setHistoryLoading(true);
@@ -129,15 +129,14 @@ export default function UploadBrief() {
                             />
                         </div>
 
-                        {/* ✅ Brief History Below Input */}
-                        {/* ✅ Brief History Below Input */}
+                        {/* Brief History */}
                         <div className="flex flex-col gap-2">
                             <h2 className="text-[12px] font-semibold text-gray-700">
                                 Recent Briefs
                             </h2>
 
                             {historyLoading ? (
-                                <p className="text-[12px] text-gray-500">Loading history...</p>
+                                <Loader /> // ✅ Loader below heading only
                             ) : history.length === 0 ? (
                                 <p className="text-[12px] text-gray-500">No briefs yet.</p>
                             ) : (
@@ -151,8 +150,6 @@ export default function UploadBrief() {
                                             {brief.rawBrief.slice(0, 40)}...
                                         </Link>
                                     ))}
-
-                                    {/* ✅ Add a link to History */}
                                     <Link
                                         to="/history"
                                         className="text-[12px] text-blue-600 hover:underline mt-2"
@@ -162,7 +159,6 @@ export default function UploadBrief() {
                                 </div>
                             )}
                         </div>
-
                     </div>
 
                     {/* Right Column */}

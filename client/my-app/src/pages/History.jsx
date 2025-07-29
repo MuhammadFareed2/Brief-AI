@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader"; // Make sure this path is correct
 
 export default function History() {
     const [briefs, setBriefs] = useState([]);
@@ -32,14 +33,10 @@ export default function History() {
 
     return (
         <Layout>
-            <div className="w-full min-h-screen px-6 py-8 font-sans">
+            <div className="w-full min-h-screen px-6 py-8 font-sans relative">
                 <h1 className="text-2xl font-bold mb-6 text-gray-900">
                     Your Brief History
                 </h1>
-
-                {loading && (
-                    <p className="text-gray-600 text-sm">Loading briefs...</p>
-                )}
 
                 {!loading && briefs.length === 0 && (
                     <p className="text-gray-600 text-sm">
@@ -75,8 +72,9 @@ export default function History() {
                         </Link>
                     ))}
                 </div>
+
+                {loading && <Loader fullscreen />}
             </div>
         </Layout>
-
     );
 }
