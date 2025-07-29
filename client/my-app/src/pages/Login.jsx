@@ -90,7 +90,8 @@ export default function Login() {
                 </div>
 
                 {/* Illustration Section */}
-                <div className="flex justify-center mb-8 lg:mb-0">
+                <div className="hidden lg:flex justify-center mb-8 lg:mb-0">
+
                     <img
                         src={illustration}
                         alt="Login Illustration"
