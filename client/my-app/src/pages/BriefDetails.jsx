@@ -11,6 +11,7 @@ import {
     pdf,
 } from "@react-pdf/renderer";
 import Loader from "../components/Loader";
+import Modal from "../components/Modal";
 
 // PDF styles
 const pdfStyles = StyleSheet.create({
@@ -81,6 +82,9 @@ export default function BriefDetails() {
         questions: true,
     });
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+
     useEffect(() => {
         const fetchBrief = async () => {
             try {
@@ -92,7 +96,8 @@ export default function BriefDetails() {
                 setBrief(data);
             } catch (err) {
                 console.error("Error fetching brief:", err);
-                alert("Could not load brief.");
+                setModalMessage("Could not load brief.");
+                setModalOpen(true);
             } finally {
                 setLoading(false);
             }
@@ -121,23 +126,33 @@ export default function BriefDetails() {
     };
 
     if (loading) {
-        return (
-            <>
-                <Loader fullscreen />
-            </>
-        );
+        return <Loader fullscreen />;
     }
 
     if (!brief) {
         return (
-            <Layout>
-                <div className="p-6 text-red-600 font-semibold">Brief not found.</div>
-            </Layout>
+            <>
+                <Layout>
+                    <div className="p-6 text-red-600 font-semibold">Brief not found.</div>
+                </Layout>
+                <Modal
+                    title="Error"
+                    body={modalMessage}
+                    isOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                />
+            </>
         );
     }
 
     return (
         <Layout>
+            <Modal
+                title="Error"
+                body={modalMessage}
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+            />
             <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Brief Details</h1>

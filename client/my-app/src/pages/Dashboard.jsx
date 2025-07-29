@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import Loader from "../components/Loader"; // ✅ Import Loader
+import Loader from "../components/Loader";
+import Modal from "../components/Modal";
 import axios from "axios";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -10,6 +11,8 @@ import {
 export default function Dashboard() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -23,7 +26,8 @@ export default function Dashboard() {
                 setStats(data);
             } catch (error) {
                 console.error("Failed to fetch stats:", error);
-                alert("Failed to load stats.");
+                setModalMessage("Failed to load stats.");
+                setModalOpen(true);
             } finally {
                 setLoading(false);
             }
@@ -33,7 +37,13 @@ export default function Dashboard() {
 
     return (
         <Layout>
-            {loading && <Loader fullscreen />} {/* ✅ Fullscreen Loader over entire dashboard */}
+            {loading && <Loader fullscreen />}
+            <Modal
+                title="Error"
+                body={modalMessage}
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+            />
 
             <div className="mb-6 px-4">
                 <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>

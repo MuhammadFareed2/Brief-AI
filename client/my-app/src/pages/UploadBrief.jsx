@@ -3,7 +3,8 @@ import axios from "axios";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
-import Loader from "../components/Loader"; // ✅ Import Loader
+import Loader from "../components/Loader";
+import Modal from "../components/Modal";
 
 export default function UploadBrief() {
     const [rawBrief, setRawBrief] = useState("");
@@ -11,6 +12,8 @@ export default function UploadBrief() {
     const [loading, setLoading] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyLoading, setHistoryLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     const handleGenerateBrief = async () => {
         setLoading(true);
@@ -30,7 +33,8 @@ export default function UploadBrief() {
             fetchHistory();
         } catch (err) {
             console.error(err);
-            alert("Failed to generate brief. Check console for details.");
+            setModalMessage("Failed to generate brief. Check console for details.");
+            setModalOpen(true);
         } finally {
             setLoading(false);
         }
@@ -62,6 +66,15 @@ export default function UploadBrief() {
 
     return (
         <Layout>
+            {modalOpen && (
+                <Modal
+                    title="Error"
+                    body={modalMessage}
+                    isOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                />
+            )}
+
             <div className="w-full h-full flex flex-col gap-4 py-4 px-4 font-['Poppins'] box-border">
                 {/* Stepper */}
                 <ScrollContainer
@@ -136,7 +149,7 @@ export default function UploadBrief() {
                             </h2>
 
                             {historyLoading ? (
-                                <Loader /> // ✅ Loader below heading only
+                                <Loader />
                             ) : history.length === 0 ? (
                                 <p className="text-[12px] text-gray-500">No briefs yet.</p>
                             ) : (

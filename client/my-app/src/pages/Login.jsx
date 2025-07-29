@@ -4,12 +4,15 @@ import Eye from "../assets/icons/eye.png";
 import illustration from "../assets/images/illustration2.png";
 import { useNavigate, Link } from "react-router-dom";
 import Loader from "../components/Loader";
+import Modal from "../components/Modal";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -23,7 +26,8 @@ export default function Login() {
             localStorage.setItem("token", data.token);
             navigate("/dashboard");
         } catch (err) {
-            alert(err.response?.data?.message || "Login failed");
+            setModalMessage(err.response?.data?.message || "Login failed");
+            setModalOpen(true);
         } finally {
             setLoading(false);
         }
@@ -32,8 +36,13 @@ export default function Login() {
     return (
         <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-white relative">
             {loading && <Loader fullscreen />}
+            <Modal
+                title="Login Failed"
+                body={modalMessage}
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+            />
             <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
-                {/* Form Section */}
                 <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-6 shadow-md">
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
@@ -44,9 +53,7 @@ export default function Login() {
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-slate-900 text-sm font-medium">
-                                Email
-                            </label>
+                            <label className="block mb-2 text-slate-900 text-sm font-medium">Email</label>
                             <input
                                 type="email"
                                 required
@@ -58,9 +65,7 @@ export default function Login() {
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-slate-900 text-sm font-medium">
-                                Password
-                            </label>
+                            <label className="block mb-2 text-slate-900 text-sm font-medium">Password</label>
                             <div className="relative flex items-center">
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -95,7 +100,6 @@ export default function Login() {
                     </form>
                 </div>
 
-                {/* Illustration Section */}
                 <div className="hidden lg:flex justify-center mb-8 lg:mb-0">
                     <img
                         src={illustration}
