@@ -32,7 +32,7 @@ export default function History() {
 
     return (
         <Layout>
-            <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
+            <div className="w-full min-h-screen px-6 py-8 font-sans">
                 <h1 className="text-2xl font-bold mb-6 text-gray-900">
                     Your Brief History
                 </h1>
@@ -77,5 +77,6 @@ export default function History() {
                 </div>
             </div>
         </Layout>
+
     );
 }
