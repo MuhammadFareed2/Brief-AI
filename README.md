@@ -37,7 +37,7 @@ Identified Missing Information
 This structured view provides a clear and comprehensive understanding of each brief.
 
 PDF Export
-From the Brief Detail page, users can export the brief to PDF. The export is fully customizable—users can choose which sections to include in the file: raw brief, structured brief, clarifying questions, or missing info.
+From the Brief Detail page, users can export the brief to PDF. The export is fully customizable users can choose which sections to include in the file: raw brief, structured brief, clarifying questions, or missing info.
 
 The generated PDF is clean, professional, and formatted to make sharing or storing easy and effective.
 
