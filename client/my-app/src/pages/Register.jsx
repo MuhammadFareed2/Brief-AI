@@ -34,7 +34,7 @@ export default function Register() {
     };
 
     return (
-        <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-white relative">
+        <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-slate-100">
             {loading && <Loader fullscreen />}
             <Modal
                 title="Registration Failed"
@@ -42,70 +42,79 @@ export default function Register() {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
             />
-            <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 max-w-7xl w-full items-center">
-                <div className="w-full max-w-md mx-auto border border-slate-200 rounded-xl p-6 shadow-md">
-                    <form onSubmit={handleRegister} className="space-y-6">
-                        <div>
-                            <h1 className="text-slate-900 text-3xl font-semibold mb-2">Register</h1>
-                            <p className="text-slate-600 text-base">
-                                Create your account and join our community.
-                            </p>
-                        </div>
 
-                        <div>
-                            <label className="block mb-2 text-slate-900 text-sm font-medium">Email</label>
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row-reverse">
+                {/* Form Section */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h1>
+                        <p className="text-slate-500">Join us and start optimizing your workflow today.</p>
+                    </div>
+
+                    <form onSubmit={handleRegister} className="space-y-5">
+                        <div className="space-y-1">
+                            <label className="text-sm font-semibold text-slate-700">Email Address</label>
                             <input
                                 type="email"
                                 required
-                                placeholder="Enter your email"
+                                placeholder="name@company.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full border border-slate-300 rounded-lg py-3 px-4 text-sm text-slate-900 outline-blue-600"
+                                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-slate-900 placeholder:text-slate-400"
                             />
                         </div>
 
-                        <div>
-                            <label className="block mb-2 text-slate-900 text-sm font-medium">Password</label>
-                            <div className="relative flex items-center">
+                        <div className="space-y-1">
+                            <label className="text-sm font-semibold text-slate-700">Password</label>
+                            <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     required
-                                    placeholder="Create a password"
+                                    placeholder="Create a strong password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full border border-slate-300 rounded-lg py-3 px-4 pr-10 text-sm text-slate-900 outline-blue-600"
+                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-slate-900 placeholder:text-slate-400 pr-10"
                                 />
-                                <img
-                                    src={Eye}
-                                    alt="Toggle password visibility"
+                                <button
+                                    type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="w-5 h-5 absolute right-4 cursor-pointer"
-                                />
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                                >
+                                    <img src={Eye} alt="Toggle" className="w-5 h-5 opacity-60" />
+                                </button>
                             </div>
                         </div>
 
-                        <button
-                            type="submit"
-                            className="cursor-pointer w-full py-3 px-4 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition"
-                        >
-                            Register
-                        </button>
-
-                        <p className="text-center text-sm text-slate-600">
-                            Already have an account?{" "}
-                            <Link to="/login" className="text-blue-600 hover:underline font-medium">
-                                Login here
-                            </Link>
-                        </p>
+                        <div className="pt-2">
+                            <button
+                                type="submit"
+                                className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-lg shadow-indigo-500/30 transition-all duration-200 transform active:scale-[0.98]"
+                            >
+                                Register
+                            </button>
+                        </div>
                     </form>
+
+                    <div className="mt-8 text-center text-sm text-slate-600">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-indigo-600 font-semibold hover:text-indigo-700 hover:underline">
+                            Sign in here
+                        </Link>
+                    </div>
                 </div>
 
-                <div className="hidden lg:flex justify-center mb-8 lg:mb-0">
-                    <img
-                        src={illustration}
-                        alt="Register Illustration"
-                        className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg object-contain"
-                    />
+                {/* Illustration/Image Section */}
+                <div className="hidden md:flex w-1/2 bg-indigo-600 relative items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-bl from-indigo-600 to-purple-700 opacity-90"></div>
+                    <div className="relative z-10 p-12 text-center text-white">
+                        <h2 className="text-3xl font-bold mb-4">Join BriefAI</h2>
+                        <p className="text-indigo-100 text-lg">
+                            Get started with the most powerful AI summarization tool available.
+                        </p>
+                    </div>
+                    {/* Decorative circles */}
+                    <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-white opacity-10"></div>
+                    <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-white opacity-10"></div>
                 </div>
             </div>
         </main>

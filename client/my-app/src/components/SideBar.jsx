@@ -31,21 +31,23 @@ export default function Sidebar() {
     return (
         <aside
             className={`
-                fixed top-0 left-0 h-screen bg-slate-900 transition-all duration-300 ease-in-out
-                flex flex-col gap-5 py-4 font-['Poppins'] z-50
-                ${isSidebarOpen ? "w-[200px]" : "w-[64px]"}
+                fixed top-0 left-0 h-screen bg-slate-900 text-white transition-all duration-300 ease-in-out z-50 shadow-xl
+                flex flex-col font-sans border-r border-slate-800
+                ${isSidebarOpen ? "w-64" : "w-20"}
             `}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            onClick={handleSidebarClick}
         >
             {/* Logo */}
-            <div className="flex items-center gap-3 px-2">
-                <img src={Logo} className="w-8" alt="Logo" />
+            <div
+                className="flex items-center gap-3 px-6 h-20 cursor-pointer border-b border-slate-800/50"
+                onClick={handleSidebarClick}
+            >
+                <img src={Logo} className="w-8 h-8 object-contain" alt="Logo" />
                 <div
                     className={`
-                        text-white text-lg font-bold overflow-hidden whitespace-nowrap transition-all duration-300
-                        ${isSidebarOpen ? "opacity-100 ml-2 w-auto" : "opacity-0 w-0 ml-0"}
+                        text-lg font-bold tracking-tight overflow-hidden whitespace-nowrap transition-all duration-300
+                        ${isSidebarOpen ? "opacity-100 w-auto ml-2" : "opacity-0 w-0"}
                     `}
                 >
                     BriefAI
@@ -53,82 +55,84 @@ export default function Sidebar() {
             </div>
 
             {/* Navigation Links */}
-            <ul className="pt-5 flex flex-col gap-1 border-t border-slate-400">
-                <NavLink
+            <nav className="flex-1 py-6 px-3 flex flex-col gap-2">
+                <NavItem
                     to="/dashboard"
-                    className={({ isActive }) =>
-                        `py-3 px-5 flex items-center text-xs ${isActive ? "border-r-4 border-green-400 bg-slate-800" : ""}`
-                    }
+                    icon={HomeIcon}
+                    label="Dashboard"
+                    isOpen={isSidebarOpen}
                     onClick={handleNavClick}
-                >
-                    <img className="w-5 nav-icon" src={HomeIcon} alt="Home" />
-                    <div
-                        className={`
-                            text-white overflow-hidden whitespace-nowrap transition-all duration-300
-                            ${isSidebarOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                        `}
-                    >
-                        Dashboard
-                    </div>
-                </NavLink>
-
-                <NavLink
+                />
+                <NavItem
                     to="/uploadbrief"
-                    className={({ isActive }) =>
-                        `py-3 px-5 flex items-center text-xs ${isActive ? "border-r-4 border-green-400 bg-slate-800" : ""}`
-                    }
+                    icon={UploadIcon}
+                    label="Upload Brief"
+                    isOpen={isSidebarOpen}
                     onClick={handleNavClick}
-                >
-                    <img className="w-5 nav-icon" src={UploadIcon} alt="Upload" />
-                    <div
-                        className={`
-                            text-white overflow-hidden whitespace-nowrap transition-all duration-300
-                            ${isSidebarOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                        `}
-                    >
-                        Upload Brief
-                    </div>
-                </NavLink>
-
-                <NavLink
+                />
+                <NavItem
                     to="/history"
-                    className={({ isActive }) =>
-                        `py-3 px-5 flex items-center text-xs ${isActive ? "border-r-4 border-green-400 bg-slate-800" : ""}`
-                    }
+                    icon={HistoryIcon}
+                    label="History"
+                    isOpen={isSidebarOpen}
                     onClick={handleNavClick}
-                >
-                    <img className="w-5 nav-icon" src={HistoryIcon} alt="History" />
-                    <div
-                        className={`
-                            text-white overflow-hidden whitespace-nowrap transition-all duration-300
-                            ${isSidebarOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
-                        `}
-                    >
-                        History
-                    </div>
-                </NavLink>
-            </ul>
+                />
+            </nav>
 
             {/* Logout */}
-            <ul className="pt-5 flex flex-col gap-1 border-t border-slate-400 mt-auto">
-                <li
-                    className="py-3 px-5 flex items-center text-xs cursor-pointer"
+            <div className="p-3 border-t border-slate-800/50 mb-2">
+                <button
+                    className={`
+                        w-full flex items-center p-3 rounded-lg transition-colors duration-200
+                        hover:bg-slate-800 text-slate-400 hover:text-white group
+                    `}
                     onClick={() => {
                         handleLogout();
                         handleNavClick();
                     }}
                 >
-                    <img className="w-5 nav-icon" src={LogoutIcon} alt="Logout" />
+                    <img className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" src={LogoutIcon} alt="Logout" />
                     <div
                         className={`
-                            text-white overflow-hidden whitespace-nowrap transition-all duration-300
-                            ${isSidebarOpen ? "opacity-100 ml-4 w-auto" : "opacity-0 w-0 ml-0"}
+                            overflow-hidden whitespace-nowrap transition-all duration-300 font-medium
+                            ${isSidebarOpen ? "opacity-100 w-auto ml-3" : "opacity-0 w-0"}
                         `}
                     >
                         Logout
                     </div>
-                </li>
-            </ul>
+                </button>
+            </div>
         </aside>
+    );
+}
+
+function NavItem({ to, icon, label, isOpen, onClick }) {
+    return (
+        <NavLink
+            to={to}
+            onClick={onClick}
+            className={({ isActive }) =>
+                `flex items-center p-3 rounded-lg transition-all duration-200 group
+                ${isActive
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                }`
+            }
+        >
+            <img
+                className={`w-5 h-5 transition-opacity ${isOpen ? "mr-3" : "mr-0 mx-auto"}`}
+                src={icon}
+                alt={label}
+                style={{ filter: "brightness(0) invert(1)" }} // Ensure icons are white/light
+            />
+            <span
+                className={`
+                    overflow-hidden whitespace-nowrap transition-all duration-300 font-medium
+                    ${isOpen ? "opacity-100 w-auto" : "opacity-0 w-0 hidden"}
+                `}
+            >
+                {label}
+            </span>
+        </NavLink>
     );
 }

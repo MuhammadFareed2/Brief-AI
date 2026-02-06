@@ -45,83 +45,163 @@ export default function Dashboard() {
                 onClose={() => setModalOpen(false)}
             />
 
-            <div className="mb-6 px-4">
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
+                <p className="text-slate-500 mt-1">Track your briefing analytics and performance.</p>
             </div>
 
             {!loading && stats ? (
                 <>
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 px-4">
-                        <StatCard title="Total Briefs" value={stats.totalBriefs} color="bg-blue-500" />
-                        <StatCard title="This Month" value={stats.briefsThisMonth} color="bg-green-500" />
-                        <StatCard title="Avg. Follow-up Questions" value={stats.clarificationLoadPerBrief || 0} color="bg-yellow-500" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <StatCard
+                            title="Total Briefs"
+                            value={stats.totalBriefs}
+                            trend="+12%" // Placeholder trend
+                            trendUp={true}
+                            colorClass="bg-blue-500"
+                        />
+                        <StatCard
+                            title="Briefs This Month"
+                            value={stats.briefsThisMonth}
+                            trend="+5%"
+                            trendUp={true}
+                            colorClass="bg-indigo-500"
+                        />
+                        <StatCard
+                            title="Avg. Clarifications"
+                            value={stats.clarificationLoadPerBrief || 0}
+                            trend="-2%"
+                            trendUp={false}
+                            colorClass="bg-emerald-500"
+                        />
                     </div>
 
                     {/* Charts Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 pb-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-10">
                         {/* Bar Chart - Last 30 Days */}
-                        <div className="bg-white p-6 rounded-lg shadow-md border overflow-x-auto">
-                            <h3 className="text-lg font-semibold mb-4">Briefs Per Day (Last 30 Days)</h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <BarChart
-                                    data={stats.briefsPerDay || []}
-                                    margin={{ top: 5, right: 30, left: 10, bottom: 30 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis
-                                        dataKey="day"
-                                        angle={-45}
-                                        textAnchor="end"
-                                        tickFormatter={(d) => {
-                                            const date = new Date(d);
-                                            return date.toLocaleDateString("en-GB", {
-                                                day: "2-digit",
-                                                month: "short"
-                                            });
-                                        }}
-                                        height={50}
-                                    />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip />
-                                    <Bar dataKey="count" fill="#3b82f6" />
-                                </BarChart>
-                            </ResponsiveContainer>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-lg font-bold text-slate-800">Activity (Last 30 Days)</h3>
+                            </div>
+                            <div className="h-[300px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart
+                                        data={stats.briefsPerDay || []}
+                                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                        <XAxis
+                                            dataKey="day"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                            dy={10}
+                                            tickFormatter={(d) => {
+                                                const date = new Date(d);
+                                                return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
+                                            }}
+                                        />
+                                        <YAxis
+                                            allowDecimals={false}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                            cursor={{ fill: '#f8fafc' }}
+                                        />
+                                        <Bar
+                                            dataKey="count"
+                                            fill="#4f46e5"
+                                            radius={[4, 4, 0, 0]}
+                                            barSize={20}
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
                         </div>
 
                         {/* Line Chart - Weekly Briefs */}
-                        <div className="bg-white p-6 rounded-lg shadow-md border">
-                            <h3 className="text-lg font-semibold mb-4">Briefs Per Week (Last 4 Weeks)</h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <LineChart
-                                    data={stats.briefsPerWeek || []}
-                                    margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="week" />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip />
-                                    <Line type="monotone" dataKey="count" stroke="#ef4444" />
-                                </LineChart>
-                            </ResponsiveContainer>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-lg font-bold text-slate-800">Weekly Trends</h3>
+                            </div>
+                            <div className="h-[300px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart
+                                        data={stats.briefsPerWeek || []}
+                                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                        <XAxis
+                                            dataKey="week"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                            dy={10}
+                                        />
+                                        <YAxis
+                                            allowDecimals={false}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="count"
+                                            stroke="#0ea5e9"
+                                            strokeWidth={3}
+                                            dot={{ fill: '#0ea5e9', strokeWidth: 2, r: 4 }}
+                                            activeDot={{ r: 6 }}
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
                         </div>
                     </div>
                 </>
             ) : !loading ? (
-                <p className="text-red-500 px-4">No stats found.</p>
+                <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 shadow-sm text-center">
+                    <div className="text-slate-400 mb-4">
+                        <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-slate-900">No stats available</h3>
+                    <p className="text-slate-500 mt-1">Start by uploading a brief to see analytics here.</p>
+                </div>
             ) : null}
         </Layout>
     );
 }
 
-function StatCard({ title, value, color }) {
+function StatCard({ title, value, trend, trendUp, colorClass }) {
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md border flex flex-col justify-between">
-            <div>
-                <h4 className="text-gray-500 text-sm">{title}</h4>
-                <h2 className="text-2xl font-bold mt-2">{value ?? "N/A"}</h2>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200 group">
+            <div className="flex justify-between items-start">
+                <div>
+                    <h4 className="text-slate-500 text-sm font-medium mb-1">{title}</h4>
+                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{value ?? "0"}</h2>
+                </div>
+                <div className={`p-2 rounded-lg ${colorClass} bg-opacity-10`}>
+                    {/* We can use an icon here based on title/color */}
+                    <div className={`w-6 h-6 rounded-full ${colorClass} opacity-80`}></div>
+                </div>
             </div>
-            <div className={`mt-4 w-12 h-1 rounded ${color}`}></div>
+
+            {trend && (
+                <div className="mt-4 flex items-center text-sm">
+                    <span className={`font-medium ${trendUp ? 'text-green-600' : 'text-red-600'} flex items-center`}>
+                        {trendUp ? '↑' : '↓'} {trend}
+                    </span>
+                    <span className="text-slate-400 ml-2">vs last month</span>
+                </div>
+            )}
         </div>
     );
 }
